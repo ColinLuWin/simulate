@@ -6,7 +6,7 @@ class CObject {
 
         this.angle = radians(0);
 
-        this.speed = random(2, 8);
+        this.speed = random(12, 18);
 
         this.vision = {
             len: random(this.radius + 30, this.radius + 300),

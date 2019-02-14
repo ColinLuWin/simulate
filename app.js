@@ -47,11 +47,13 @@ function draw() {
     objects.forEach(element => {
         element.update();
 
-        if (element.pos.x < 0 || element.pos.x > view_width)
-            backToCenter(element);
+        // if (element.pos.x < 0 || element.pos.x > view_width)
+        //     backToCenter(element);
 
-        if (element.pos.y < 0 || element.pos.y > view_height)
-            backToCenter(element);
+        // if (element.pos.y < 0 || element.pos.y > view_height)
+        //     backToCenter(element);
+        element.pos.x = constrain(element.pos.x, 0 + element.radius, view_width - element.radius);
+        element.pos.y = constrain(element.pos.y, 0 + element.radius, view_height - element.radius);
     });
 
     objects.forEach(element => {
