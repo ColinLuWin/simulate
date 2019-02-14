@@ -13,8 +13,8 @@ function setup() {
     createCanvas(view_width, view_height);
     for (let index = 0; index < 10; index++) {
         objects.push(new CObject({
-            x: random(20, view_width),
-            y: random(20, view_height)
+            x: random(30, view_width),
+            y: random(30, view_height)
         }, random(10, 30), {
             r: random(255),
             g: random(255),
