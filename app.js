@@ -6,16 +6,14 @@ let moving_objects = [];
 let static_objects = [];
 let player;
 
-let responses = [];
-
 
 function setup() {
     createCanvas(view_width, view_height);
-    for (let index = 0; index < 0; index++) {
+    for (let index = 0; index < 200; index++) {
         var moving_obj = new CObject({
-            x: random(30, view_width),
-            y: random(30, view_height)
-        }, random(10, 30), {
+            x: random(100, view_width - 100),
+            y: random(100, view_height - 100)
+        }, random(3, 6), {
             r: random(255),
             g: random(255),
             b: random(255)
@@ -25,6 +23,16 @@ function setup() {
         moving_objects.push(moving_obj);
     }
 
+    addWall(0, 0, 1280, 30);
+    addWall(0, 0, 30, 720);
+    addWall(1250, 0, 30, 720);
+    addWall(0, 690, 1280, 30);
+
+    addWall(800, 500, 100, 100);
+    addWall(200, 100, 500, 50);
+    addWall(200, 400, 20, 200);
+    addWall(900, 300, 200, 50);
+
     player = new CObject({
         x: view_width / 2,
         y: view_height / 2
@@ -33,24 +41,28 @@ function setup() {
         g: 0,
         b: 0
     });
-    player.auto = false;
-    player.speed = 10;
+    //player.auto = false;
+    player.speed = 6;
 
     draw_objects.push(player);
     moving_objects.push(player);
 
+
+
+    frameRate(30);
+}
+
+function addWall(x, y, w, h) {
     var wall = new StaticObject({
-        x: 1200,
-        y: 60
+        x: x,
+        y: y
     }, {
-        width: 60,
-        height: 600
+        width: w,
+        height: h
     });
 
     draw_objects.push(wall);
     static_objects.push(wall);
-
-    frameRate(30);
 }
 
 function draw() {
@@ -59,24 +71,26 @@ function draw() {
     moving_objects.forEach(element => {
         element.update();
 
-        element.pos.x = constrain(element.pos.x, 0 + element.radius, view_width - element.radius);
-        element.pos.y = constrain(element.pos.y, 0 + element.radius, view_height - element.radius);
-
         //collision detection
-        static_objects.forEach(s => {
-            //console.log(s);
-            var c = new SAT.Circle(new SAT.Vector(element.pos.x, element.pos.y), element.detection.r);
+        for (let index = 0; index < static_objects.length; index++) {
+            const s = static_objects[index];
+            var v = element.visionBox.toPolygon(element.pos, element.angle);
             var p = new SAT.Box(new SAT.Vector(s.pos.x, s.pos.y), s.size.width, s.size.height);
             var response = new SAT.Response();
 
-            var b = SAT.testCirclePolygon(c, p.toPolygon(), response);
-
+            var b = SAT.testPolygonPolygon(v, p.toPolygon(), response);
             if (b == true) {
-                //console.clear();
-                console.log(response);
-            }
+                if (element.crazy.value == false) {
 
-        });
+                    //console.log(response);
+                    element.crazy.active();
+                }
+
+                break;
+            } else {
+                element.crazy.deactive();
+            }
+        }
     });
 
     draw_objects.forEach(element => {
