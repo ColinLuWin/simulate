@@ -6,7 +6,7 @@ let _world;
 window.setup = function () {
     createCanvas(cfg.viewport.width, cfg.viewport.height);
     _world = new world(cfg);
-    frameRate(30);
+    frameRate(60);
 }
 
 window.draw = function () {

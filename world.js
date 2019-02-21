@@ -8,7 +8,7 @@ export default class world {
         this.static_objects = [];
         this.moving_objects = [];
 
-        for (let index = 0; index < 200; index++) {
+        for (let index = 0; index < cfg.simCount; index++) {
             var moving_obj = new CObject({
                 x: random(100, this.config.viewport.width - 100),
                 y: random(100, this.config.viewport.height - 100)
@@ -31,7 +31,7 @@ export default class world {
             b: 0
         });
         //this.player.auto = false;
-        this.player.speed = 6;
+        this.player.speed = 2;
 
         this.moving_objects.push(this.player);
         this.objects.push(this.player);
@@ -44,7 +44,8 @@ export default class world {
 
         this._addWall(800, 500, 100, 100);
         this._addWall(200, 100, 500, 50);
-        this._addWall(200, 400, 20, 200);
+        this._addWall(200, 300, 20, 400);
+        this._addWall(300, 150, 20, 400);
         this._addWall(900, 300, 200, 50);
     }
 
@@ -68,21 +69,22 @@ export default class world {
             //collision detection
             for (let index = 0; index < this.static_objects.length; index++) {
                 const s = this.static_objects[index];
-                var v = o.visionBox.toPolygon(o.pos, o.angle);
-                var p = new SAT.Box(new SAT.Vector(s.pos.x, s.pos.y), s.size.width, s.size.height);
+                var p = new SAT.Box(new SAT.Vector(s.pos.x, s.pos.y), s.size.width, s.size.height).toPolygon();
                 var response = new SAT.Response();
 
-                var b = SAT.testPolygonPolygon(v, p.toPolygon(), response);
-                if (b == true) {
-                    if (o.crazy.value == false) {
-
-                        //console.log(response);
-                        o.crazy.active();
-                    }
-
+                var vleft = o.visionLines.left.toPolygon();
+                var bleft = SAT.testPolygonPolygon(vleft, p, response);
+                if (bleft == true) {
+                    o.visionLines.left.trigger();
                     break;
-                } else {
-                    o.crazy.deactive();
+                }
+
+                response.clear();
+                var vright = o.visionLines.right.toPolygon();
+                var bright = SAT.testPolygonPolygon(vright, p, response);
+                if (bright == true) {
+                    o.visionLines.right.trigger();
+                    break;
                 }
             }
         });
