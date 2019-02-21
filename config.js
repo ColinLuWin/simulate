@@ -3,7 +3,7 @@ const viewport = {
     height: 720
 };
 
-const simCount = 100;
+const simCount = 1;
 
 export {
     viewport,

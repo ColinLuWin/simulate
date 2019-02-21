@@ -1,8 +1,10 @@
 import visionLine from "./visionLine.js";
+import boundingCircle from "./boundingCircle.js";
 
 export default class CObject {
     constructor(pos, radius, color) {
         this.pos = pos;
+        this.lastPos = pos;
         this.radius = radius;
         this.color = color;
         this.auto = true;
@@ -13,6 +15,8 @@ export default class CObject {
             left: new visionLine(this, 100, 'left'),
             right: new visionLine(this, 100, 'right')
         };
+
+        this.boundingCircle = new boundingCircle(this, this.radius + 30);
 
         this.crazy = {
             value: false
@@ -27,6 +31,11 @@ export default class CObject {
     }
 
     go(direction) {
+        this.lastPos = {
+            x: this.pos.x,
+            y: this.pos.y
+        };
+
         if (direction == 'forward') {
             this.pos.x += this.speed * cos(this.angle);
             this.pos.y += this.speed * sin(this.angle);
@@ -36,6 +45,11 @@ export default class CObject {
             this.pos.x -= this.speed * .5 * cos(this.angle);
             this.pos.y -= this.speed * .5 * sin(this.angle);
         }
+    }
+
+    backToOldPosition() {
+        this.pos.x = this.lastPos.x;
+        this.pos.y = this.lastPos.y;
     }
 
     update() {
@@ -76,6 +90,7 @@ export default class CObject {
         fill(this.color.r, this.color.g, this.color.b);
         ellipse(this.pos.x, this.pos.y, this.radius * 2, this.radius * 2);
 
+        this.boundingCircle.draw();
         this.visionLines.left.draw();
         this.visionLines.right.draw();
     }

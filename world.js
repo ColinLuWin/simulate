@@ -86,6 +86,13 @@ export default class world {
                     o.visionLines.right.trigger();
                     break;
                 }
+
+                response.clear();
+                var bounding = SAT.testCirclePolygon(o.boundingCircle.toCircle(), p, response);
+                if (bounding == true) {
+                    o.boundingCircle.trigger();
+                    break;
+                }
             }
         });
     }
