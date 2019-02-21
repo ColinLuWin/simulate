@@ -1,4 +1,4 @@
-class CObject {
+export default class CObject {
     constructor(pos, radius, color) {
         this.pos = pos;
         this.radius = radius;
