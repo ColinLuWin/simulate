@@ -14,6 +14,6 @@ export default class boundingCircle {
     }
 
     trigger() {
-        this.anchor.backToOldPosition();
+        this.anchor.findWayOut();
     }
 }

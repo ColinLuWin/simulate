@@ -13,8 +13,8 @@ export default class visionLine {
     _getRelativePosition() {
         var co = this._type === 'left' ? -1 : 1;
 
-        var x0 = this._anchor.radius * cos(this._anchor.angle + radians(90) * co);
-        var y0 = this._anchor.radius * sin(this._anchor.angle + radians(90) * co);
+        var x0 = this._anchor.boundingCircle.radius * cos(this._anchor.angle + radians(90) * co);
+        var y0 = this._anchor.boundingCircle.radius * sin(this._anchor.angle + radians(90) * co);
 
         var x1 = x0 + this._length * cos(this._anchor.angle);
         var y1 = y0 + this._length * sin(this._anchor.angle);

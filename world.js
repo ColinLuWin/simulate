@@ -22,20 +22,6 @@ export default class world {
             this.objects.push(moving_obj);
         }
 
-        this.player = new CObject({
-            x: this.config.viewport.width / 2,
-            y: this.config.viewport.height / 2
-        }, 20, {
-            r: 255,
-            g: 0,
-            b: 0
-        });
-        //this.player.auto = false;
-        this.player.speed = 2;
-
-        this.moving_objects.push(this.player);
-        this.objects.push(this.player);
-
         //create walls
         this._addWall(0, 0, 1280, 30);
         this._addWall(0, 0, 30, 720);
@@ -70,28 +56,22 @@ export default class world {
             for (let index = 0; index < this.static_objects.length; index++) {
                 const s = this.static_objects[index];
                 var p = new SAT.Box(new SAT.Vector(s.pos.x, s.pos.y), s.size.width, s.size.height).toPolygon();
-                var response = new SAT.Response();
 
                 var vleft = o.visionLines.left.toPolygon();
-                var bleft = SAT.testPolygonPolygon(vleft, p, response);
+                var bleft = SAT.testPolygonPolygon(vleft, p, null);
                 if (bleft == true) {
                     o.visionLines.left.trigger();
-                    break;
                 }
 
-                response.clear();
                 var vright = o.visionLines.right.toPolygon();
-                var bright = SAT.testPolygonPolygon(vright, p, response);
+                var bright = SAT.testPolygonPolygon(vright, p, null);
                 if (bright == true) {
                     o.visionLines.right.trigger();
-                    break;
                 }
 
-                response.clear();
-                var bounding = SAT.testCirclePolygon(o.boundingCircle.toCircle(), p, response);
+                var bounding = SAT.testCirclePolygon(o.boundingCircle.toCircle(), p, null);
                 if (bounding == true) {
                     o.boundingCircle.trigger();
-                    break;
                 }
             }
         });
